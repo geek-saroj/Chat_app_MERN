@@ -85,10 +85,14 @@ mongoose.connect(
     useNewUrlParser: true,
     useUnifiedTopology: true,
   },
-  () => {
-    console.log("MONGODB CONNECTED");
-  }
-);
+  (err) => {
+    if (!err) {
+      console.log('MongoDB Connection Succeeded.');
+    } else {
+      console.log('Error in DB connection : ' + err);
+    }
+  });
+  
 
 app.get("/",(req,res)=>{
   res.send("Welcome to the AmigoChat API")

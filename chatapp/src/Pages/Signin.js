@@ -1,18 +1,25 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useRef,useContext } from 'react'
 import './Signin-up.css'
 import { Link } from 'react-router-dom'
+import ReCAPTCHA from "react-google-recaptcha"
 import axios from 'axios'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { AuthContext } from '../Context/AuthContext'
 
 function Signin() {
+    const SITE_KEY = "6LdJ91clAAAAAJiUira_g-bve3gFeRNZlqrQA220"
 
     const [email, setEmail] = useState()   /* Instead of Using useState hook we can use useRef and keep ref in the required input field for getting data */
     const [password, setPassword] = useState()
+    const [recaptchValue, setRecaptchValue] = useState('')
+    const captchaRef = useRef();
     const [error,setError] = useState("")
     const { isFetching, dispatch } = useContext(AuthContext)
 
     const API_URL = process.env.REACT_APP_API_URL
+    const onChange = value => {
+        setRecaptchValue(value)
+      }
 
     const loginCall = async (userCredential, dispatch) => {
         dispatch({ type: "LOGIN_START" });
@@ -25,6 +32,7 @@ function Signin() {
             setError("Wrong Password Or Username")
         }
     }
+    
 
     const handleForm = (e) => {
         e.preventDefault()
@@ -43,6 +51,17 @@ function Signin() {
                         <input className='signin-textbox' type="email" placeholder="Enter Email" name="username" required onChange={(e) => { setEmail(e.target.value) }} />
                         <label htmlFor="password"><b>Password</b></label>
                         <input className='signin-textbox' type="password" minLength='6' placeholder="Enter Password" name="psw" required onChange={(e) => { setPassword(e.target.value) }} />
+                    </div>
+                    <div>
+                    <div className="form-group mt-4">
+                <ReCAPTCHA
+                  sitekey={SITE_KEY}
+                  onChange={onChange}
+                  ref={captchaRef}
+
+                />
+
+              </div>
                     </div>
                     <button className="signin-button" disabled={isFetching}>{isFetching ? <CircularProgress color="#ffffff" /> : "Log In"}</button>
                     <a className="forget-pass" href="#home">Forgot password?</a>

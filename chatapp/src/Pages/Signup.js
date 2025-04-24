@@ -23,6 +23,8 @@ function Signup() {
 
   const API_URL = process.env.REACT_APP_API_URL
 
+  console.log("API_URL", API_URL)
+
   const onChange = value => {
     setRecaptchValue(value)
   }
@@ -98,12 +100,12 @@ function Signup() {
                 </div>
               </div>
               <div className="form-group mt-4">
-                <ReCAPTCHA
+                {/* <ReCAPTCHA
                   sitekey={SITE_KEY}
                   onChange={onChange}
                   ref={captchaRef}
 
-                />
+                /> */}
 
               </div>
 

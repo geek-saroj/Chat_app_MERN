@@ -8,6 +8,8 @@ function SidebarChat({ chatroomtile, currentUser }) {
     const [user, setUser] = useState(null)
     const [online, setOnline] = useState(false);
     const socket = useRef()
+    console.log("socket.current", socket.current)
+
 
     const API_URL = process.env.REACT_APP_API_URL
 

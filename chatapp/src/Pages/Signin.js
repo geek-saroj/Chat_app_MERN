@@ -54,12 +54,12 @@ function Signin() {
                     </div>
                     <div>
                     <div className="form-group mt-4">
-                <ReCAPTCHA
+                {/* <ReCAPTCHA
                   sitekey={SITE_KEY}
                   onChange={onChange}
                   ref={captchaRef}
 
-                />
+                /> */}
 
               </div>
                     </div>

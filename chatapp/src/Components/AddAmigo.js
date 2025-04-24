@@ -32,8 +32,8 @@ function AddAmigo({addchattoggler,addchattoggle}) {
                 <div className="close-div" ><span onClick={addchattoggler}><p className="close-symbol">x</p></span></div>
                 <form>
                     <img className='add-amigo-img' src='assets/addamigo.png' alt=''></img>
-                    <input type="text" placeholder="Enter Username of Amigo" value={amigousername} onChange={(e) => { setAmigoUsername(e.target.value) }} required />
-                    <button onClick={handleSubmit}>ADD AMIGO</button>
+                    <input type="text" placeholder="Enter Username " value={amigousername} onChange={(e) => { setAmigoUsername(e.target.value) }} required />
+                    <button onClick={handleSubmit}>Add Friend</button>
                 </form>
             </div>
         </div>

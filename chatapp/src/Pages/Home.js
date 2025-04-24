@@ -23,6 +23,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
+import { common } from "@material-ui/core/colors";
 
 function Home() {
   const [chatroomtiles, setChatroomtiles] = useState([]);
@@ -36,7 +37,7 @@ function Home() {
   const scrollRef = useRef();
   const socket = useRef();
 
-  const API_URL = process.env.REACT_APP_API_URL
+  const API_URL = process.env.REACT_APP_API_URL;
 
   /* Making Messages Realtime */
 
@@ -83,7 +84,7 @@ function Home() {
       try {
         const response = await axios.get(API_URL + "api/users/" + amigoId);
         setAmigo(response.data);
-      } catch (err) { }
+      } catch (err) {}
     };
     getAmigodetails();
   }, [user, currentchat, API_URL]);
@@ -129,9 +130,7 @@ function Home() {
       text: newMessage,
     };
 
-    const receiverId = currentchat.members.find(
-      (member) => member !== user._id
-    );
+    const receiverId = currentchat.members.find((member) => member !== user._id);
 
     socket.current.emit("sendMessage", {
       senderId: user._id,
@@ -139,6 +138,10 @@ function Home() {
       text: newMessage,
     });
 
+    console.log("sendingMessage", sendingMessage);
+    console.log("receiverId", receiverId);
+    console.log("senderId", user._id);
+    console.log("currentchat", currentchat);
     try {
       const response = await axios.post(API_URL + "api/messages/", sendingMessage);
       setMessages([...messages, response.data]);
@@ -146,7 +149,7 @@ function Home() {
     } catch (err) {
       console.log(err);
     }
-    setPick(false)
+    setPick(false);
   };
 
   /* Logout */
@@ -174,20 +177,36 @@ function Home() {
   return (
     <div className="home">
       {/* Chat Adding Card */}
-      <AddAmigo addchattoggler={() => { addchatToggler(); }} addchattoggle={addtoggle} />
+      <AddAmigo
+        addchattoggler={() => {
+          addchatToggler();
+        }}
+        addchattoggle={addtoggle}
+      />
 
       {/* Profile Page Card - Update */}
-      <ProfilePage toggler={() => { profiletoggler(); }} togglestate={profiletoggle} />
+      <ProfilePage
+        toggler={() => {
+          profiletoggler();
+        }}
+        togglestate={profiletoggle}
+      />
 
       {/* Sidebar Open Menu */}
-      {open
-        ? ""
-        : <div className="menu-open" onClick={() => { setOpen(true); }} >
+      {open ? (
+        ""
+      ) : (
+        <div
+          className="menu-open"
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
           <IconButton>
             <MenuIcon style={{ fontSize: 35, color: "#316af3" }} />
           </IconButton>
         </div>
-      }
+      )}
 
       {/* Add Chat Icon */}
       <div className="add-chatroom-icon" onClick={addchatToggler}>
@@ -198,17 +217,29 @@ function Home() {
 
       {/* Sidebar, ChatRoom */}
       <div className="home-components">
-
         {/* Sidebar */}
         <div className={open ? "sidebar active" : "sidebar"}>
           <div className="sidebar-header">
-            <div className="menu-close" onClick={() => { setOpen(false); }} >
+            <div
+              className="menu-close"
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
               <IconButton>
                 <CloseIcon style={{ fontSize: 35, color: "white" }} />
               </IconButton>
             </div>
-            <IconButton onClick={() => { profiletoggler(); }} >
-              <img className="user-profile-image" src={user?.photo ? API_URL + "photo/" + user?.photo : "assets/noavatar.jpg"} alt='' />
+            <IconButton
+              onClick={() => {
+                profiletoggler();
+              }}
+            >
+              <img
+                className="user-profile-image"
+                src={user?.photo ? API_URL + "photo/" + user?.photo : "assets/noavatar.jpg"}
+                alt=""
+              />
             </IconButton>
             <div className="logout-option">
               <IconButton onClick={logout}>
@@ -229,7 +260,11 @@ function Home() {
             {chatroomtiles.map((chatroomtile) => (
               <div
                 key={chatroomtile?._id}
-                onClick={() => { setCurrentchat(chatroomtile); setOpen(false) }} >
+                onClick={() => {
+                  setCurrentchat(chatroomtile);
+                  setOpen(false);
+                }}
+              >
                 <SidebarChat chatroomtile={chatroomtile} currentUser={user} />
               </div>
             ))}
@@ -242,7 +277,11 @@ function Home() {
             <>
               <div className="chatroom-header">
                 <div className="chatroom-chatinfo">
-                  <img className='amigo-profilepic' src={amigo?.photo ? API_URL + "photo/" + amigo?.photo : "assets/noavatar.jpg"} alt='' />
+                  <img
+                    className="amigo-profilepic"
+                    src={amigo?.photo ? API_URL + "photo/" + amigo?.photo : "assets/noavatar.jpg"}
+                    alt=""
+                  />
 
                   <div className="chatroom-chatinfo-right">
                     <div className="chatroom-chatinfo-name">
@@ -251,14 +290,19 @@ function Home() {
                   </div>
                 </div>
               </div>
-              <div className="chatroom-messages-container" onClick={() => { setPick(false) }}>
+              <div
+                className="chatroom-messages-container"
+                onClick={() => {
+                  setPick(false);
+                }}
+              >
                 {messages.map((message) => (
                   <div key={message?._id} ref={scrollRef}>
                     <Message message={message} own={message?.senderId === user._id} />
                   </div>
                 ))}
               </div>
-              <div className={pick ? "emoji-picker-open" : "emoji-picker-close"} >
+              <div className={pick ? "emoji-picker-open" : "emoji-picker-close"}>
                 <Picker onSelect={addEmoji} emojiSize={25} />
               </div>
               <div className="chatroom-footer">
@@ -271,10 +315,23 @@ function Home() {
                   </IconButton>
                 </div>
                 <form>
-                  <input className="message-input" type="text" name="message-input" placeholder="Type a message" onChange={(e) => { setNewMessage(e.target.value); }} value={newMessage} required />
-                  <button className="input-button" onClick={newMessage ? handleSubmit : null} > Send a Message </button>
+                  <input
+                    className="message-input"
+                    type="text"
+                    name="message-input"
+                    placeholder="Type a message"
+                    onChange={(e) => {
+                      setNewMessage(e.target.value);
+                    }}
+                    value={newMessage}
+                    required
+                  />
+                  <button className="input-button" onClick={newMessage ? handleSubmit : null}>
+                    {" "}
+                    Send a Message{" "}
+                  </button>
                 </form>
-                <div className="chatroom-footer-righticon" onClick={newMessage ? handleSubmit : null} >
+                <div className="chatroom-footer-righticon" onClick={newMessage ? handleSubmit : null}>
                   <IconButton>
                     <SendIcon className="send-icon" />
                   </IconButton>

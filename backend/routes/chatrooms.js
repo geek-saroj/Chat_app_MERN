@@ -5,7 +5,9 @@ const router = express.Router()
 
 /* Creating a Chatroom by members userId's */
 router.post('/',async (req,res)=>{
+    console.log("req.body in chatroomss",req.body)
     const newChatroom = new Chatroom({
+
         members : [req.body.senderId, req.body.receiverId],
     });
     try{

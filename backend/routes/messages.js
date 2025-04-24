@@ -5,7 +5,9 @@ const router = express.Router()
 
 /* Posting a Message based on the chatroom id and senderId */
 router.post('/',async (req,res)=>{
+    console.log("req.body in messages",req.body)
     const newMessage = await new Message({
+
         chatroomId:req.body.chatroomId,
         senderId:req.body.senderId,
         text:req.body.text

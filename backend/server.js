@@ -8,17 +8,18 @@ import messageRoutes from "./routes/messages.js";
 import chatroomRoutes from "./routes/chatrooms.js";
 import http from "http";
 import { Server } from "socket.io";
-
+import morgan from "morgan";
 
 /* App Config */
 const app = express();
 const port = process.env.PORT || 5000;
+
 dotenv.config();
 
 /* Middleware -> Deals the Connections between database and the App */
 app.use(express.json());
 app.use(cors());
-
+app.use(morgan("dev"));
 
 /* Socket.io Setup */
 const server = http.createServer(app);
@@ -31,8 +32,7 @@ const io = new Server(server, {
 let users = [];
 
 const addUser = (userId, socketId) => {
-  !users.some((user) => user.userId === userId) &&
-    users.push({ userId, socketId });
+  !users.some((user) => user.userId === userId) && users.push({ userId, socketId });
 };
 
 const removeUser = (socketId) => {
@@ -45,7 +45,7 @@ const getUser = (userId) => {
 
 io.on("connection", (socket) => {
   //when connect
-  console.log("One User Got Connected.");
+  console.log("One User Got Connected.", socket.id);
 
   //take userId and socketId from user
   socket.on("addUser", (userId) => {
@@ -70,6 +70,7 @@ io.on("connection", (socket) => {
   });
 });
 
+console.log("users", users);
 /* API Routes -> The first part is the default path for all the requests in that users.js file there we have to continue from this path */
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
@@ -87,16 +88,16 @@ mongoose.connect(
   },
   (err) => {
     if (!err) {
-      console.log('MongoDB Connection Succeeded.');
+      console.log("MongoDB Connection Succeeded.");
     } else {
-      console.log('Error in DB connection : ' + err);
+      console.log("Error in DB connection : " + err);
     }
-  });
-  
+  }
+);
 
-app.get("/",(req,res)=>{
-  res.send("Welcome to the AmigoChat API")
-})
+app.get("/", (req, res) => {
+  res.send("Welcome to the AmigoChat API");
+});
 
 /* Port Listening In */
 server.listen(port, () => {
